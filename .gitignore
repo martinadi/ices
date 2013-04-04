@@ -1,3 +1,7 @@
 assets/
+musics/
+upload_tmp/
+protected/extensions/
 protected/runtime/
+protected/runtime/config/
 themes/classic/views/
