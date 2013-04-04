@@ -11,6 +11,8 @@ class StatisticController extends Controller{
 		
 		$listener_array = array();
 		
+		//print_r($listener_raw);exit;
+		
 		if($listeners > 1){
 			foreach($listener_raw['source']['listener'] as $listener){
 				$location = Yii::app()->geoip->lookupLocation($listener['IP']);
@@ -28,10 +30,10 @@ class StatisticController extends Controller{
 					'longitude' => $location->longitude,
 				);
 			}
-		}else{			
+		}else if($listeners == 1){			
 			$location = Yii::app()->geoip->lookupLocation($listener_raw['source']['listener']['IP']);
 			$listener_array[] = array(
-					'listener_id' => $listener_raw['source']['listener']['ID'],
+					'id' => $listener_raw['source']['listener']['ID'],
 					'ip' => $listener_raw['source']['listener']['IP'],
 					'user_agent' => $listener_raw['source']['listener']['UserAgent'],
 					'conected_time' => $listener_raw['source']['listener']['Connected'],
@@ -42,7 +44,11 @@ class StatisticController extends Controller{
 					'latitude' => $location->latitude,
 					'longitude' => $location->longitude,
 			);
+		}else{
+			$listener_array = array();
 		}
+		
+		//print_r($listener_array);exit;
 		
 		$gridDataProvider = new CArrayDataProvider($listener_array);
 		
