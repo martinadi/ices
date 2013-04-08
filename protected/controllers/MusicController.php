@@ -26,6 +26,10 @@ class MusicController extends Controller{
 				
 				$time = time();
 				$upload_dir = Yii::app()->params['upload_tmp'];
+
+				if(!is_dir($upload_dir)){
+					mkdir($upload_dir);
+				}
 				
 				$formModel->file->saveAs($upload_dir . $time);
 				$this->redirect(array('saveUpload', 'file' => $time));
