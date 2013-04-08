@@ -13,8 +13,7 @@ class ScheduleCommand extends CConsoleCommand{
 		->queryScalar();	
 
 		var_dump($playlist_id);
-		$playlist_id = 5;
-
+		
 		if($playlist_id){
 			$playlist = Playlist::model()->with('PlaylistHasMusic', 'Music')->findByAttributes(array('playlist_id' => $playlist_id));
 				
