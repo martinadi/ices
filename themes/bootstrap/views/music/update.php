@@ -12,6 +12,7 @@
 				<?php echo $form->textFieldRow($formModel, 'title'); ?>				
 				<?php echo $form->textFieldRow($formModel, 'artist'); ?>
 				<?php echo $form->textFieldRow($formModel, 'album'); ?>
+				<?php echo $form->textFieldRow($formModel, 'year'); ?>
 				<?php echo $form->textFieldRow($formModel, 'genre'); ?>
 			</fieldset>
 			

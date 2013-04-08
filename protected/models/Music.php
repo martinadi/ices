@@ -12,6 +12,7 @@
  * @property string $title
  * @property string $artist
  * @property string $album
+ * @property string $year
  * @property string $genre
  * @property string $created
  * @property string $updated
@@ -49,13 +50,13 @@ class Music extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('title, artist', 'required'),
-			array('filename, title, artist, album, genre', 'length', 'max'=>128),
+			array('filename, title, artist, year, album, genre', 'length', 'max'=>128),
 			array('playtime_string', 'length', 'max'=>8),
 			array('bitrate', 'length', 'max'=>16),
 			array('created, updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('music_id, filename, playtime_string, playtime_second, bitrate, title, artist, album, genre, created, updated', 'safe', 'on'=>'search'),
+			array('music_id, filename, playtime_string, playtime_second, bitrate, title, artist, album, year, genre, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,6 +86,7 @@ class Music extends CActiveRecord
 			'title' => 'Title',
 			'artist' => 'Artist',
 			'album' => 'Album',
+			'yaer' => 'Year',
 			'genre' => 'Genre',
 			'created' => 'Created',
 			'updated' => 'Updated',
@@ -110,6 +112,7 @@ class Music extends CActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);
 		$criteria->compare('album',$this->album,true);
+		$criteria->compare('year',$this->year,true);
 		$criteria->compare('genre',$this->genre,true);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
@@ -130,6 +133,7 @@ class Music extends CActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);
 		$criteria->compare('album',$this->album,true);
+		$criteria->compare('year',$this->year,true);
 		$criteria->compare('genre',$this->genre,true);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
@@ -150,6 +154,7 @@ class Music extends CActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);
 		$criteria->compare('album',$this->album,true);
+		$criteria->compare('year',$this->year,true);
 		$criteria->compare('genre',$this->genre,true);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);

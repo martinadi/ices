@@ -55,7 +55,7 @@ class MusicController extends Controller{
 		
 		$fileinfo = $getid3->analyze($upload_dir.$file);
 		
-		//print_r($fileinfo);//exit;
+		//print_r($fileinfo);exit;
 		
 		// seharusnya $fileinfo['fileformat'] akan tetapi sementara di haruskan mp3 dulu. 
 		// add issue id3v2
@@ -64,32 +64,57 @@ class MusicController extends Controller{
 				$tag = 'vorbiscomment';
 				break;
 			case 'mp3':
-				$AllowedTagFormats = array('id3v1', 'id3v2', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
+				$AllowedTagFormats = array('id3v1', 'id3v2', 'id3v2.2', 'id3v2.3', 'id3v2.4'); //'ape', 'lyrics3'
+				arsort($AllowedTagFormats);
 				$tag = '';
-				foreach($AllowedTagFormats as $allowedTag){
-					if(isset($fileinfo[$allowedTag])){
-						$tag = $allowedTag;
-						break;
+
+				if(isset($fileinfo['tags'])){
+					if(count($fileinfo['tags'] > 1)){
+						arsort($fileinfo['tags']);
+						reset($fileinfo['tags']);
+						$tag = key($fileinfo['tags']);
+					}else{
+						foreach($AllowedTagFormats as $allowedTag){
+							if(isset($fileinfo[$allowedTag])){
+								$tag = $allowedTag;
+								break;
+							}
+						}
+					}
+				}else{
+					foreach($AllowedTagFormats as $allowedTag){
+						if(isset($fileinfo[$allowedTag])){
+							$tag = $allowedTag;
+							break;
+						}
 					}
 				}
+				
 				if($tag == ''){
 					$tag = 'id3v1';
 				}
 				break;
 		}
 		
-		//echo $tag;exit;
-		
-		//print_r($fileinfo);exit;
-		
-		if(!isset($_POST['MusicForm'])){
-			$_POST['MusicForm']['title'] = (isset($fileinfo['tags'][$tag]['title'][0]))?$fileinfo['tags'][$tag]['title'][0]:null;
-			$_POST['MusicForm']['artist'] = (isset($fileinfo['tags'][$tag]['artist'][0]))?$fileinfo['tags'][$tag]['artist'][0]:null;
-			$_POST['MusicForm']['album'] = (isset($fileinfo['tags'][$tag]['album'][0]))?$fileinfo['tags'][$tag]['album'][0]:null;
-			$_POST['MusicForm']['genre'] = (isset($fileinfo['tags'][$tag]['genre'][0]))?$fileinfo['tags'][$tag]['genre'][0]:null;			
+		if(isset($fileinfo['tags'])){
+			if(!isset($_POST['MusicForm'])){
+				$_POST['MusicForm']['title'] = (isset($fileinfo['tags'][$tag]['title'][0]))?$fileinfo['tags'][$tag]['title'][0]:null;
+				$_POST['MusicForm']['artist'] = (isset($fileinfo['tags'][$tag]['artist'][0]))?$fileinfo['tags'][$tag]['artist'][0]:null;
+				$_POST['MusicForm']['album'] = (isset($fileinfo['tags'][$tag]['album'][0]))?$fileinfo['tags'][$tag]['album'][0]:null;
+				$_POST['MusicForm']['year'] = (isset($fileinfo['tags'][$tag]['year'][0]))?$fileinfo['tags'][$tag]['year'][0]:null;
+				$_POST['MusicForm']['genre'] = (isset($fileinfo['tags'][$tag]['genre'][0]))?$fileinfo['tags'][$tag]['genre'][0]:null;
+			}	
+		}else{
+			if(!isset($_POST['MusicForm'])){
+				$_POST['MusicForm']['title'] = (isset($fileinfo[$tag]['comments']['title'][0]))?$fileinfo[$tag]['comments']['title'][0]:null;
+				$_POST['MusicForm']['artist'] = (isset($fileinfo[$tag]['comments']['artist'][0]))?$fileinfo[$tag]['comments']['artist'][0]:null;
+				$_POST['MusicForm']['album'] = (isset($fileinfo[$tag]['comments']['album'][0]))?$fileinfo[$tag]['comments']['album'][0]:null;
+				$_POST['MusicForm']['year'] = (isset($fileinfo[$tag]['comments']['year'][0]))?$fileinfo[$tag]['comments']['year'][0]:null;
+				$_POST['MusicForm']['genre'] = (isset($fileinfo[$tag]['comments']['genre'][0]))?$fileinfo[$tag]['comments']['genre'][0]:null;
+			}
 		}
 		
-		//print_r($_POST);exit;
+				
 		
 		$formModel = new MusicForm;
 		
@@ -107,10 +132,11 @@ class MusicController extends Controller{
 				$TagData['title'][] 	= strtolower($_POST['MusicForm']['title']);
 				$TagData['artist'][] 	= strtolower($_POST['MusicForm']['artist']);
 				$TagData['album'][] 	= strtolower($_POST['MusicForm']['album']);
+				$TagData['year'][] 	= strtolower($_POST['MusicForm']['year']);
 				$TagData['genre'][] 	= strtolower($_POST['MusicForm']['genre']);
 				$tagwriter->tag_data 	= $TagData;
 				
-				$tagwriter->tagformats     = array($tag);
+				//$tagwriter->tagformats     = array($tag);
 				
 				if ($tagwriter->WriteTags()) {
 					rename($upload_dir.$file, Yii::app()->params['music_dir'].$file);
@@ -120,6 +146,7 @@ class MusicController extends Controller{
 					$model->title = strtolower($_POST['MusicForm']['title']);
 					$model->artist = strtolower($_POST['MusicForm']['artist']);
 					$model->album = strtolower($_POST['MusicForm']['album']);
+					$model->year = strtolower($_POST['MusicForm']['year']);
 					$model->genre = strtolower($_POST['MusicForm']['genre']);
 					$model->playtime_string = (isset($fileinfo['playtime_string']))?$fileinfo['playtime_string']:null;
 					$model->playtime_second = (isset($fileinfo['playtime_seconds']))?$fileinfo['playtime_seconds']:null;
@@ -137,6 +164,14 @@ class MusicController extends Controller{
 					}
 					
 				} else {
+					
+					/* if(in_array('Tag format "id3v1" is not allowed on "" files', $tagwriter->errors)){
+						echo "id3v1";
+					}
+					
+					if(in_array('Tag format "id3v2" is not allowed on "mp3.mp3" files', $tagwriter->errors)){
+						echo "id3v2 error";
+					} */
 					echo 'Failed to write tags!<BLOCKQUOTE STYLE="background-color:#FF9999; padding: 10px;">'.implode('<br><br>', $tagwriter->errors).'</BLOCKQUOTE>';
 					exit;
 				}
@@ -147,7 +182,7 @@ class MusicController extends Controller{
 		
 		$this->render('saveupload', array('formModel' => $formModel, 'file' => $file));
 	}
-	
+		
 	public function actionView($id){
 		$model = Music::model()->findByPk($id);
 		
@@ -198,7 +233,6 @@ class MusicController extends Controller{
 			$TagData['genre'][] 	= strtolower($_POST['Music']['genre']);
 			$tagwriter->tag_data 	= $TagData;
 			
-			$tagwriter->tagformats     = array('vorbiscomment');
 			
 			if ($tagwriter->WriteTags()) {
 				if($model->save()){
