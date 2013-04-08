@@ -81,7 +81,7 @@ function reloadGrid(data) {
 								'id' => 'music_id',
 								'selectableRows' => '50',
 							),
-							'title','artist','album','playtime',				
+							'title','artist','album','playtime_string',				
 					),
 			));
 		
@@ -127,17 +127,17 @@ function reloadGrid(data) {
 							
 							),
 							array(
-									'name' => 'music_playtime',
-									'value' => '$data->Music->playtime',
+									'name' => 'music_playtime_string',
+									'value' => '$data->Music->playtime_string',
 							
 							),
-							//'Music.title','Music.artist', 'Music.album', 'Music.playtime'
+							//'Music.title','Music.artist', 'Music.album', 'Music.playtime_string'
 							/* array(
 								'class' => 'CCheckBoxColumn',
 								'id' => 'music_id',
 								'selectableRows' => '50',
 							),
-							'Music.title','Music.artist','Music.album','Music.playtime', */				
+							'Music.title','Music.artist','Music.album','Music.playtime_string', */				
 					),
 			));
 		

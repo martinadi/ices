@@ -13,7 +13,7 @@ class PlaylistHasMusic extends CActiveRecord
 	public $music_title;
 	public $music_artist;
 	public $music_album;
-	public $music_playtime;
+	public $music_playtime_string;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -44,7 +44,7 @@ class PlaylistHasMusic extends CActiveRecord
 			array('playlist_id, music_id, queue', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('playlist_id, music_id, queue, music_title, music_artist, music_album, music_playtime', 'safe', 'on'=>'search'),
+			array('playlist_id, music_id, queue, music_title, music_artist, music_album, music_playtime_string', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,7 +73,7 @@ class PlaylistHasMusic extends CActiveRecord
 			'music_title' => 'Title',
 			'music_artist' => 'Artist',
 			'music_album' => 'Album',
-			'music_playtime' => 'Playtime'
+			'music_playtime_string' => 'Playtime'
 		);
 	}
 
@@ -94,7 +94,7 @@ class PlaylistHasMusic extends CActiveRecord
 		$criteria->compare('Music.title', $this->music_title, true);
 		$criteria->compare('Music.artist', $this->music_artist, true);
 		$criteria->compare('Music.album', $this->music_album, true);
-		$criteria->compare('Music.playtime', $this->music_playtime, true);
+		$criteria->compare('Music.playtime_string', $this->music_playtime_string, true);
 		
 		$criteria->order = "queue Asc";
 

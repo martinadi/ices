@@ -55,12 +55,16 @@ class MusicController extends Controller{
 		
 		$fileinfo = $getid3->analyze($upload_dir.$file);
 		
-		switch ($fileinfo['fileformat']) {
+		//print_r($fileinfo);//exit;
+		
+		// seharusnya $fileinfo['fileformat'] akan tetapi sementara di haruskan mp3 dulu. 
+		// add issue id3v2
+		switch ("mp3") {
 			case 'ogg':
 				$tag = 'vorbiscomment';
 				break;
 			case 'mp3':
-				$AllowedTagFormats = array('id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
+				$AllowedTagFormats = array('id3v1', 'id3v2', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
 				$tag = '';
 				foreach($AllowedTagFormats as $allowedTag){
 					if(isset($fileinfo[$allowedTag])){
@@ -74,6 +78,8 @@ class MusicController extends Controller{
 				break;
 		}
 		
+		//echo $tag;exit;
+		
 		//print_r($fileinfo);exit;
 		
 		if(!isset($_POST['MusicForm'])){
@@ -82,6 +88,8 @@ class MusicController extends Controller{
 			$_POST['MusicForm']['album'] = (isset($fileinfo['tags'][$tag]['album'][0]))?$fileinfo['tags'][$tag]['album'][0]:null;
 			$_POST['MusicForm']['genre'] = (isset($fileinfo['tags'][$tag]['genre'][0]))?$fileinfo['tags'][$tag]['genre'][0]:null;			
 		}
+		
+		//print_r($_POST);exit;
 		
 		$formModel = new MusicForm;
 		
@@ -113,7 +121,8 @@ class MusicController extends Controller{
 					$model->artist = strtolower($_POST['MusicForm']['artist']);
 					$model->album = strtolower($_POST['MusicForm']['album']);
 					$model->genre = strtolower($_POST['MusicForm']['genre']);
-					$model->playtime = (isset($fileinfo['playtime_string']))?$fileinfo['playtime_string']:null;
+					$model->playtime_string = (isset($fileinfo['playtime_string']))?$fileinfo['playtime_string']:null;
+					$model->playtime_second = (isset($fileinfo['playtime_seconds']))?$fileinfo['playtime_seconds']:null;
 					$model->bitrate = (isset($fileinfo['bitrate']))?$fileinfo['bitrate']:null;
 					
 					
@@ -124,10 +133,12 @@ class MusicController extends Controller{
 					}
 					if (!empty($tagwriter->warnings)) {
 						echo 'There were some warnings:<BLOCKQUOTE STYLE="background-color:#FFCC33; padding: 10px;">'.implode('<br><br>', $tagwriter->warnings).'</BLOCKQUOTE>';
+						exit;
 					}
 					
 				} else {
 					echo 'Failed to write tags!<BLOCKQUOTE STYLE="background-color:#FF9999; padding: 10px;">'.implode('<br><br>', $tagwriter->errors).'</BLOCKQUOTE>';
+					exit;
 				}
 				$this->redirect(array('view', 'id' => $music_id));
 				exit;

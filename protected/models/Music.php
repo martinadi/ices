@@ -6,7 +6,8 @@
  * The followings are the available columns in table 'music':
  * @property integer $music_id
  * @property string $filename
- * @property string $playtime
+ * @property string $playtime_string
+ * @property string $playtime_second
  * @property string $bitrate
  * @property string $title
  * @property string $artist
@@ -49,12 +50,12 @@ class Music extends CActiveRecord
 		return array(
 			array('title, artist', 'required'),
 			array('filename, title, artist, album, genre', 'length', 'max'=>128),
-			array('playtime', 'length', 'max'=>8),
+			array('playtime_string', 'length', 'max'=>8),
 			array('bitrate', 'length', 'max'=>16),
 			array('created, updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('music_id, filename, playtime, bitrate, title, artist, album, genre, created, updated', 'safe', 'on'=>'search'),
+			array('music_id, filename, playtime_string, playtime_second, bitrate, title, artist, album, genre, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +79,8 @@ class Music extends CActiveRecord
 		return array(
 			'music_id' => 'Music',
 			'filename' => 'Filename',
-			'playtime' => 'Playtime',
+			'playtime_string' => 'playtime String',
+			'playtime_second' => 'playtime Second',
 			'bitrate' => 'Bitrate',
 			'title' => 'Title',
 			'artist' => 'Artist',
@@ -102,7 +104,8 @@ class Music extends CActiveRecord
 
 		$criteria->compare('music_id',$this->music_id);
 		$criteria->compare('filename',$this->filename,true);
-		$criteria->compare('playtime',$this->playtime,true);
+		$criteria->compare('playtime_string',$this->playtime_string,true);
+		$criteria->compare('playtime_second',$this->playtime_second,true);
 		$criteria->compare('bitrate',$this->bitrate,true);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);
@@ -121,7 +124,8 @@ class Music extends CActiveRecord
 		
 		$criteria->addNotInCondition('music_id', $this->in_array);
 		
-		$criteria->compare('playtime',$this->playtime,true);
+		$criteria->compare('playtime_string',$this->playtime_string,true);
+		$criteria->compare('playtime_second',$this->playtime_second,true);
 		$criteria->compare('bitrate',$this->bitrate,true);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);
@@ -140,7 +144,8 @@ class Music extends CActiveRecord
 	
 		$criteria->addInCondition('music_id', $this->in_array);
 	
-		$criteria->compare('playtime',$this->playtime,true);
+		$criteria->compare('playtime_string',$this->playtime_string,true);
+		$criteria->compare('playtime_second',$this->playtime_second,true);
 		$criteria->compare('bitrate',$this->bitrate,true);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('artist',$this->artist,true);

@@ -6,7 +6,7 @@
 	<?php $this->widget('bootstrap.widgets.TbDetailView',array(
 		'data'=>$model,
 		'attributes'=>array(
-			'title','artist','album','genre','playtime',
+			'title','artist','album','genre','playtime_string',
 			array('type' => 'raw', 'label' => 'Bitrate', 'value' => floor($model->bitrate / 1000) . " kbps")		
 		),
 	)); 

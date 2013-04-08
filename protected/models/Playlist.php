@@ -105,4 +105,16 @@ class Playlist extends CActiveRecord
 	
 		return parent::beforeSave();
 	}
+	
+	public function updateDuration($id){
+		$duration = Yii::app()->db->createCommand()
+			->select('sum(b.playtime_second)')
+			->from('playlist_has_music a')
+			->join('music b', ' a.music_id = b.music_id')
+			->where('a.playlist_id=:playlist_id', array(':playlist_id' => $id))
+			->queryScalar();
+		
+		Yii::app()->db->createCommand()->update($this->tableName(), array('duration' => $duration), 'playlist_id=:playlist_id', array(':playlist_id' => $id));
+		
+	}
 }

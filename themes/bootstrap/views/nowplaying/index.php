@@ -33,17 +33,17 @@ $this->widget('bootstrap.widgets.TbGridView',array(
 							
 				),
 				array(
-						'name' => 'music_playtime',
-						'value' => '$data->Music->playtime',
+						'name' => 'music_playtime_string',
+						'value' => '$data->Music->playtime_string',
 							
 				),
-				//'Music.title','Music.artist', 'Music.album', 'Music.playtime'
+				//'Music.title','Music.artist', 'Music.album', 'Music.playtime_string'
 				/* array(
 						'class' => 'CCheckBoxColumn',
 						'id' => 'music_id',
 						'selectableRows' => '50',
 				),
-'Music.title','Music.artist','Music.album','Music.playtime', */
+'Music.title','Music.artist','Music.album','Music.playtime_string', */
 		),
 ));
 

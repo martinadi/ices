@@ -226,6 +226,7 @@ class PlaylistController extends Controller{
 			$PlaylistHasMusic->queue = $last_queue;
 			$PlaylistHasMusic->save();
 		}
+		Playlist::model()->updateDuration($id);
 	}
 	
 	public function actionAjaxRemoveMusic(){
@@ -236,7 +237,12 @@ class PlaylistController extends Controller{
 			$music_id = trim($sel[1]);
 			
 			PlaylistHasMusic::model()->findByAttributes(array('playlist_id' => $playlist_id, 'music_id' => $music_id))->delete();
-		}
+			Playlist::model()->updateDuration($playlist_id);
+		}		
+	}
+	
+	public function actionTest(){
+		Playlist::model()->updateDuration(4);
 	}
 	
 }

@@ -8,7 +8,7 @@ $this->widget('bootstrap.widgets.TbGridView',array(
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'title','artist','album','playtime',
+		'title','artist','album','playtime_string',
 		
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',

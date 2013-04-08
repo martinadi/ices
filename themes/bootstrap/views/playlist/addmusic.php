@@ -24,7 +24,7 @@ $form=$this->beginWidget('CActiveForm', array(
 						'id' => 'music_id',
 						'selectableRows' => '50',
 					),
-					'title','artist','album','playtime',				
+					'title','artist','album','playtime_string',				
 			),
 	));
 
